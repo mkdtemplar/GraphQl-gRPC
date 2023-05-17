@@ -1,10 +1,10 @@
-create table if not exists public."UserRepo"
+create table if not exists public.user
 (
     id   bigserial constraint id primary key,
     name varchar(100)
 );
 
-alter table public."UserRepo" owner to graphql;
+alter table public.user owner to graphql;
 
 create table if not exists public.cars
 (
@@ -15,7 +15,7 @@ create table if not exists public.cars
     model    varchar(100),
     user_id  integer
     constraint cars_user_id_fk
-    references public."UserRepo"
+    references public.user
     );
 
 alter table public.cars

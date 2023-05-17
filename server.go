@@ -1,6 +1,7 @@
 package main
 
 import (
+	"graphqhhowto/database"
 	"graphqhhowto/graph"
 	"log"
 	"net/http"
@@ -17,6 +18,7 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+	database.InitDB()
 	mux := http.NewServeMux()
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 

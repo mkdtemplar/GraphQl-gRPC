@@ -15,7 +15,7 @@ func (u *User) Save() (int, error) {
 		log.Fatal(err)
 	}
 	//#5
-	id, err := res.LastInsertId()
+	id, err := res.RowsAffected()
 	if err != nil {
 		log.Fatal("Error:", err.Error())
 	}
