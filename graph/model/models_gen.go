@@ -8,6 +8,15 @@ type Cars struct {
 	Model   string `json:"model"`
 }
 
+type DeleteUser struct {
+	ID string `json:"id"`
+}
+
+type NewCar struct {
+	CarName string `json:"carName"`
+	Model   string `json:"model"`
+}
+
 type NewUser struct {
 	Name string `json:"name"`
 }

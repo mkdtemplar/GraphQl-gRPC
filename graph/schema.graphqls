@@ -18,6 +18,14 @@ input NewUser {
   name: String!
 }
 
+input NewCar {
+  carName : String!
+  model : String!
+}
+input DeleteUser {
+  id : String!
+}
+
 type Query {
   allUsers : [User!]!
   getUserByID(id : ID!) : User!
@@ -27,8 +35,8 @@ type Query {
 type Mutation {
   createUser(input: NewUser!) : User!
   updateUser(id : ID! name: String!) : User!
-  deleteUser(id : ID!) : User
-  createCar(carName: String!, model : String!): Cars
+  deleteUser(input : DeleteUser) : Boolean!
+  createCar(input : NewCar): Cars
   updateCar(id : ID!, carName : String!, model : String) : Cars
   deleteCar(id: ID!) : Cars
 }

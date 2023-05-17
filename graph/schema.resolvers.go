@@ -30,12 +30,23 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id string, name strin
 }
 
 // DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
+func (r *mutationResolver) DeleteUser(ctx context.Context, input *model.DeleteUser) (bool, error) {
+	id, _ := uuid.Parse(input.ID)
+	var user database.User
+	res, err := user.Delete(ctx, id)
+	if err != nil {
+		return false, err
+	}
+
+	if res != 0 {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // CreateCar is the resolver for the createCar field.
-func (r *mutationResolver) CreateCar(ctx context.Context, carName string, model string) (*model.Cars, error) {
+func (r *mutationResolver) CreateCar(ctx context.Context, input *model.NewCar) (*model.Cars, error) {
 	panic(fmt.Errorf("not implemented: CreateCar - createCar"))
 }
 
@@ -68,7 +79,6 @@ func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
 
 // GetUserByID is the resolver for the getUserByID field.
 func (r *queryResolver) GetUserByID(ctx context.Context, id string) (*model.User, error) {
-
 	idUUID, _ := uuid.Parse(id)
 	userModel := database.User{}
 	userDb, _ := userModel.GetByID(ctx, idUUID)

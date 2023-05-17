@@ -39,3 +39,18 @@ func (u *User) GetByID(ctx context.Context, id uuid.UUID) (*User, error) {
 
 	return u, nil
 }
+func (u *User) Delete(ctx context.Context, uid uuid.UUID) (int64, error) {
+	var err error
+
+	tx := DB.Begin()
+
+	delTx := tx.WithContext(ctx).Model(&User{}).Delete(&User{}, uid)
+
+	if err = delTx.Error; err != nil {
+		return 0, err
+	} else {
+		tx.Commit()
+	}
+
+	return tx.RowsAffected, nil
+}
