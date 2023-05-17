@@ -1,24 +1,21 @@
 package database
 
 import (
-	"database/sql"
 	"log"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	_ "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func InitDB() {
 	connStr := "user=graphql password=graphql host=localhost port=5432 dbname=graphql_data sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalf("cannot connect to db %v", err)
-	}
-
-	if err = db.Ping(); err != nil {
-		log.Panic(err)
 	}
 	DB = db
 

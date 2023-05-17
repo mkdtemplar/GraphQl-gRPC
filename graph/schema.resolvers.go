@@ -9,17 +9,18 @@ import (
 	"fmt"
 	"graphqhhowto/database"
 	"graphqhhowto/graph/model"
-	"strconv"
+
+	"github.com/google/uuid"
 )
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	var newUser database.User
 	newUser.Name = input.Name
-	userID, _ := newUser.Save()
+	userCreate, _ := newUser.Save(ctx)
 	return &model.User{
-		ID:   strconv.FormatInt(int64(userID), 10),
-		Name: newUser.Name,
+		ID:   userCreate.ID.String(),
+		Name: userCreate.Name,
 	}, nil
 }
 
@@ -49,8 +50,33 @@ func (r *mutationResolver) DeleteCar(ctx context.Context, id string) (*model.Car
 }
 
 // AllUsers is the resolver for the allUsers field.
-func (r *queryResolver) AllUsers(ctx context.Context, last *int) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: AllUsers - allUsers"))
+func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
+	var users []*model.User
+	var user database.User
+	usersDB, err := user.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+	for _, u := range *usersDB {
+		users = append(users, &model.User{
+			ID:   u.ID.String(),
+			Name: u.Name,
+		})
+	}
+	return users, nil
+}
+
+// GetUserByID is the resolver for the getUserByID field.
+func (r *queryResolver) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+
+	idUUID, _ := uuid.Parse(id)
+	userModel := database.User{}
+	userDb, _ := userModel.GetByID(ctx, idUUID)
+
+	return &model.User{
+		ID:   userDb.ID.String(),
+		Name: userDb.Name,
+	}, nil
 }
 
 // AllCars is the resolver for the allCars field.

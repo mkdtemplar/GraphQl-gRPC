@@ -19,7 +19,8 @@ input NewUser {
 }
 
 type Query {
-  allUsers(last: Int): User
+  allUsers : [User!]!
+  getUserByID(id : ID!) : User!
   allCars(last: Int): Cars
 }
 

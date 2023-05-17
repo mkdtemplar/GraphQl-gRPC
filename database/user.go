@@ -1,24 +1,41 @@
 package database
 
-import "log"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 type User struct {
-	Name string `json:"name"`
+	ID   uuid.UUID `gorm:"primary_key;type:uuid" json:"id"`
+	Name string    `json:"name"`
 }
 
-func (u *User) Save() (int, error) {
-	stmt, err := DB.Prepare("INSERT INTO public.user (name) VALUES ($1) RETURNING id")
+func (u *User) Save(ctx context.Context) (*User, error) {
+	u.ID = uuid.New()
+	result := DB.WithContext(ctx).Create(&u)
 
-	res, err := stmt.Exec(u.Name)
+	if result.Error != nil {
+		return &User{}, result.Error
+	}
+	return u, nil
+}
+func (u *User) GetAllUsers() (*[]User, error) {
+	var users []User
 
-	if err != nil {
-		log.Fatal(err)
+	result := DB.Model(&u).Find(&users)
+	if result.Error != nil {
+		return &[]User{}, result.Error
 	}
-	//#5
-	id, err := res.RowsAffected()
-	if err != nil {
-		log.Fatal("Error:", err.Error())
+
+	return &users, nil
+}
+func (u *User) GetByID(ctx context.Context, id uuid.UUID) (*User, error) {
+	result := DB.WithContext(ctx).Model(&User{}).Where("id = ?", id).Take(&u)
+
+	if result.Error != nil {
+		return &User{}, result.Error
 	}
-	log.Print("Row inserted!")
-	return int(id), nil
+
+	return u, nil
 }
