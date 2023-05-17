@@ -33,10 +33,10 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, input *model.UpdateUs
 	if err != nil {
 		return nil, err
 	}
-	getUpdatedUser, _ := user.GetByID(ctx, uuID)
+	userUpdate, _ = user.GetByID(ctx, uuID)
 
 	return &model.User{
-		ID:   getUpdatedUser.ID.String(),
+		ID:   userUpdate.ID.String(),
 		Name: userUpdate.Name,
 	}, nil
 }
