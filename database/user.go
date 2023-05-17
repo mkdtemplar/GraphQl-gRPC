@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 type User struct {
@@ -53,4 +54,17 @@ func (u *User) Delete(ctx context.Context, uid uuid.UUID) (int64, error) {
 	}
 
 	return tx.RowsAffected, nil
+}
+
+func (u *User) UpdateUserById(ctx context.Context, userid uuid.UUID, name string) (*User, error) {
+	var err error
+	user := &User{}
+	err = DB.WithContext(ctx).Model(&User{}).
+		Where("id = ?", userid).Take(&user).UpdateColumns(map[string]interface{}{"name": name}).
+		Clauses(clause.Returning{}).Select("id", "name").Error
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

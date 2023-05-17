@@ -25,8 +25,20 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 // UpdateUser is the resolver for the updateUser field.
-func (r *mutationResolver) UpdateUser(ctx context.Context, id string, name string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))
+func (r *mutationResolver) UpdateUser(ctx context.Context, input *model.UpdateUser) (*model.User, error) {
+	uuID, _ := uuid.Parse(input.ID)
+
+	var user database.User
+	userUpdate, err := user.UpdateUserById(ctx, uuID, input.Name)
+	if err != nil {
+		return nil, err
+	}
+	getUpdatedUser, _ := user.GetByID(ctx, uuID)
+
+	return &model.User{
+		ID:   getUpdatedUser.ID.String(),
+		Name: userUpdate.Name,
+	}, nil
 }
 
 // DeleteUser is the resolver for the deleteUser field.
