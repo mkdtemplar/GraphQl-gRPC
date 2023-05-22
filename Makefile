@@ -1,3 +1,4 @@
+
 postgres:
 	docker run --name graphqldb -p 5432:5432  -e POSTGRES_USER=graphql  -e POSTGRES_PASSWORD=graphql -d postgres:latest
 
@@ -16,4 +17,8 @@ dropdb:
 migratedown:
 	migrate -path db/migration -database "postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" -verbose down
 
-.PHONY: postgres createdb createtestdb dropdb migrateup migratedown migratecreate
+graphql:
+	protoc -I gRPC/proto --go_opt=module=graphqhhowto --go_out=. --go-grpc_opt=module=graphqhhowto --go-grpc_out=. gRPC/proto/*.proto
+
+
+.PHONY: postgres createdb createtestdb dropdb migrateup migratedown migratecreate graphql
