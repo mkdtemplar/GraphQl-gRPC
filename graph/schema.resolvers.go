@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"graphqhhowto/database"
+	"graphqhhowto/gRPC/proto/client"
 	"graphqhhowto/graph/model"
 
 	"github.com/google/uuid"
@@ -17,10 +18,12 @@ import (
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	var newUser database.User
 	newUser.Name = input.Name
-	userCreate, _ := newUser.Save(ctx)
+	//userCreate, _ := newUser.Save(ctx)
+	userGRPC := client.CreateUserInDb(&newUser)
+
 	return &model.User{
-		ID:   userCreate.ID.String(),
-		Name: userCreate.Name,
+		ID:   userGRPC.Id,
+		Name: userGRPC.Name,
 	}, nil
 }
 

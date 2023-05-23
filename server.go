@@ -1,37 +1,30 @@
 package main
 
 import (
-	"context"
-	"graphqhhowto/database"
 	"graphqhhowto/graph"
 	"log"
-	"net"
-	"net/http"
 	"os"
-
-	pb "graphqhhowto/gRPC/proto"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"google.golang.org/grpc"
+	"github.com/gin-gonic/gin"
 )
 
-const defaultPort = "8080"
+const defaultPort = ":8080"
 
-type Server struct {
-	pb.UserServiceServer
+func graphHandler() gin.HandlerFunc {
+	h := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
 }
 
-func (s *Server) CreateUser(ctx context.Context, usr *pb.User) (*pb.User, error) {
-	//userId, _ := uuid.Parse(usr.Id)
-	//data := &database.User{
-	//	ID:   userId,
-	//	Name: usr.Name,
-	//}
-	//
-	//res, _ := data.Save(ctx)
-
-	return nil, nil
+func playgroundHandler() gin.HandlerFunc {
+	h := playground.Handler("GraphQL playground", "/query")
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
 }
 
 func main() {
@@ -39,27 +32,17 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-	database.InitDB()
-	lis, err := net.Listen("tcp", port)
+	gin.SetMode(gin.ReleaseMode)
+	mux := gin.Default()
 
+	err := mux.Run(defaultPort)
 	if err != nil {
-		log.Fatalf("failed to listen %v\n", err)
+		log.Fatalf("Can not start server %s", err)
 	}
-
-	log.Printf("Listening to address %s\n", port)
-
-	s := grpc.NewServer()
-	pb.RegisterUserServiceServer(s, &Server{})
-
-	if err = s.Serve(lis); err != nil {
-		log.Fatalf("failed to start grpc server %v\n", err)
-	}
-	mux := http.NewServeMux()
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
-
-	mux.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	mux.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+
+	mux.POST("/query", graphHandler())
+	mux.GET("/", playgroundHandler())
+
 }
