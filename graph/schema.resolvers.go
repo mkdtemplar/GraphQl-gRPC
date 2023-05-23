@@ -77,14 +77,16 @@ func (r *mutationResolver) DeleteCar(ctx context.Context, id string) (*model.Car
 // AllUsers is the resolver for the allUsers field.
 func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
-	var user database.User
-	usersDB, err := user.GetAllUsers()
-	if err != nil {
-		return nil, err
-	}
-	for _, u := range *usersDB {
+	//var user database.User
+
+	usersgRPC := client.ListAllUsers()
+	//usersDB, err := user.GetAllUsers()
+	//if err != nil {
+	//	return nil, err
+	//}
+	for _, u := range usersgRPC {
 		users = append(users, &model.User{
-			ID:   u.ID.String(),
+			ID:   u.Id,
 			Name: u.Name,
 		})
 	}
