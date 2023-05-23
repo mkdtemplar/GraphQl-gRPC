@@ -18,7 +18,6 @@ import (
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	var newUser database.User
 	newUser.Name = input.Name
-	//userCreate, _ := newUser.Save(ctx)
 	userGRPC := client.CreateUserInDb(&newUser)
 
 	return &model.User{
