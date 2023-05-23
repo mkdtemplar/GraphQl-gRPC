@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var add = "localhost:50051"
+var add = ":50051"
 
 func CreateUserInDb(in *database.User) *proto.User {
 	conn, err := grpc.Dial(add, grpc.WithTransportCredentials(insecure.NewCredentials()))

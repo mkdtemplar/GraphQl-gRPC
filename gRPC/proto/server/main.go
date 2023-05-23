@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-var add = "0.0.0.0:50051"
+var add = ":50051"
 
 type Server struct {
 	pb.UnimplementedUserServiceServer

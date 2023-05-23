@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const defaultPort = ":8080"
+const defaultPort = "0.0.0.0:8080"
 
 func graphHandler() gin.HandlerFunc {
 	h := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
@@ -35,14 +35,12 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	mux := gin.Default()
 
+	mux.POST("/query", graphHandler())
+	mux.GET("/", playgroundHandler())
 	err := mux.Run(defaultPort)
 	if err != nil {
 		log.Fatalf("Can not start server %s", err)
 	}
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-
-	mux.POST("/query", graphHandler())
-	mux.GET("/", playgroundHandler())
-
 }
