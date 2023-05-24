@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const defaultPort = "0.0.0.0:8080"
+const defaultPort = ":8080"
 
 func graphHandler() gin.HandlerFunc {
 	h := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))

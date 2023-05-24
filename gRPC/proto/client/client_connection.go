@@ -1,27 +1,27 @@
 package client
 
 import (
-	"graphqhhowto/gRPC/proto"
 	"log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func clientConn() (*grpc.ClientConn, proto.UserServiceClient, error) {
+var add = ":50051"
+var ConnectClient *grpc.ClientConn
+
+func clientConn() *grpc.ClientConn {
 	conn, err := grpc.Dial(add, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		log.Fatalf("Failed to dial %v\n", err)
 	}
-	defer func(conn *grpc.ClientConn) {
-		err = conn.Close()
-		if err != nil {
 
-		}
-	}(conn)
+	ConnectClient = conn
 
-	c := proto.NewUserServiceClient(conn)
+	return conn
+}
 
-	return conn, c, nil
+func GetClientConnection() *grpc.ClientConn {
+	return ConnectClient
 }

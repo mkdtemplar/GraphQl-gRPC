@@ -6,22 +6,14 @@ import (
 	"io"
 	"log"
 
-	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type Client struct {
-	*grpc.ClientConn
-}
-
 func ListAllUsers() []*pb.User {
 	var users []*pb.User
-	conn, c, err := clientConn()
-	if err != nil {
-		return nil
-	}
+	conn := clientConn()
 
-	c = pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
 
 	stream, err := c.GetAllUsers(context.Background(), &emptypb.Empty{})
 	if err != nil {
