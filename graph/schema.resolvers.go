@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"graphqhhowto/database"
 	"graphqhhowto/gRPC/proto/client"
+
+	pb "graphqhhowto/gRPC/proto/client"
 	"graphqhhowto/graph/model"
 
 	"github.com/google/uuid"
@@ -18,7 +20,7 @@ import (
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	var newUser database.User
 	newUser.Name = input.Name
-	userGRPC := client.CreateUserInDb(&newUser)
+	userGRPC := pb.CreateUserInDb(&newUser)
 
 	return &model.User{
 		ID:   userGRPC.Id,
@@ -77,13 +79,8 @@ func (r *mutationResolver) DeleteCar(ctx context.Context, id string) (*model.Car
 // AllUsers is the resolver for the allUsers field.
 func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
-	//var user database.User
 
 	usersgRPC := client.ListAllUsers()
-	//usersDB, err := user.GetAllUsers()
-	//if err != nil {
-	//	return nil, err
-	//}
 	for _, u := range usersgRPC {
 		users = append(users, &model.User{
 			ID:   u.Id,
