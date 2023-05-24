@@ -78,11 +78,8 @@ func (r *mutationResolver) DeleteCar(ctx context.Context, id string) (*model.Car
 func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
 
-	usersgRPC := pb.ListAllUsers()
-	//usersDB, err := user.GetAllUsers()
-	//if err != nil {
-	//	return nil, err
-	//}
+	usersgRPC := pb.Cl.ListAllUsers()
+
 	for _, u := range usersgRPC {
 		users = append(users, &model.User{
 			ID:   u.Id,
