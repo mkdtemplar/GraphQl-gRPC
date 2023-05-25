@@ -7,7 +7,7 @@ package graph
 import (
 	"context"
 	"fmt"
-	pb "gRPC-services/gRPC/proto/client"
+	pb "graphqhhowto/client"
 	"graphqhhowto/database"
 	"graphqhhowto/graph/model"
 
