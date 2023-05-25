@@ -8,8 +8,8 @@ import (
 	"context"
 	"fmt"
 	pb "gRPC-services/gRPC/proto/client"
-	"graphqhhowto/pkg/database"
-	"graphqhhowto/pkg/graph/model"
+	"graphqhhowto/database"
+	"graphqhhowto/graph/model"
 
 	"github.com/google/uuid"
 )
