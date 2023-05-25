@@ -1,8 +1,8 @@
 package main
 
 import (
-	"graphqhhowto/database"
-	pb "graphqhhowto/gRPC/proto"
+	pb "gRPC-services/gRPC/proto"
+	"graphqhhowto/pkg/database"
 	"log"
 	"net"
 

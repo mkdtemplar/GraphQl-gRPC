@@ -1,7 +1,7 @@
 package main
 
 import (
-	"graphqhhowto/graph"
+	"graphqhhowto/pkg/graph"
 	"log"
 	"os"
 

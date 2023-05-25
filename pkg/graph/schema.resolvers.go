@@ -7,9 +7,9 @@ package graph
 import (
 	"context"
 	"fmt"
-	"graphqhhowto/database"
-	pb "graphqhhowto/gRPC/proto/client"
-	"graphqhhowto/graph/model"
+	pb "gRPC-services/gRPC/proto/client"
+	"graphqhhowto/pkg/database"
+	"graphqhhowto/pkg/graph/model"
 
 	"github.com/google/uuid"
 )
