@@ -29,12 +29,6 @@ var Cl = NewClient()
 func (c *Client) CreateUserInDb(in *database.User) *pb.User {
 	c.ClientConn = clientConn()
 
-	//defer func(conn *grpc.ClientConn) {
-	//	err := conn.Close()
-	//	if err != nil {
-	//
-	//	}
-	//}(c.ClientConn)
 	client := pb.NewUserServiceClient(c.ClientConn)
 
 	r, err := client.CreateUser(context.Background(), &pb.User{
@@ -49,7 +43,7 @@ func (c *Client) CreateUserInDb(in *database.User) *pb.User {
 
 func (c *Client) ListAllUsers() []*pb.User {
 	var users []*pb.User
-
+	c.ClientConn = clientConn()
 	client := pb.NewUserServiceClient(c.ClientConn)
 
 	stream, err := client.GetAllUsers(context.Background(), &emptypb.Empty{})
