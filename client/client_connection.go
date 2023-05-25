@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var add = ":50051"
+var add = "0.0.0.0:50051"
 var ConnectClient *grpc.ClientConn
 
 func clientConn() *grpc.ClientConn {
